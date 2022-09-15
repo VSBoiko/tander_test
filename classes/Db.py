@@ -119,8 +119,6 @@ class Db:
                 connection.executemany(query, data)
         except sqlite3.IntegrityError as err:
             # log
-            print("Возникла ошибка: ", err)
             return False
         else:
-            print("Запись данных прошла успешно")
             return True

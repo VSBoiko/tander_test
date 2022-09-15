@@ -32,11 +32,12 @@ class Db:
             with connection:
                 cursor = connection.cursor()
                 cursor.executescript(sql_script)
-
-            return True
-        except Exception as e:
+        except Exception as err:
+            # log
             sys.path.remove(self.get_db_name())
             return False
+        else:
+            return True
 
     def does_db_exist(self) -> bool:
         return True if os.path.exists(self.get_db_name()) else False
@@ -117,6 +118,7 @@ class Db:
             with connection:
                 connection.executemany(query, data)
         except sqlite3.IntegrityError as err:
+            # log
             print("Возникла ошибка: ", err)
             return False
         else:

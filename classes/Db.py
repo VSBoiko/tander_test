@@ -8,6 +8,15 @@ class Db:
         self.__db_name = db_name
         self.__script_path = script_path
 
+    def add_user(self, second_name: str, first_name: str, patronymic: str,
+                 region_id: int, city_id: int, phone: str, email: str) -> bool:
+        query = "INSERT INTO " \
+                "users(second_name, first_name, patronymic, " \
+                "region_id, city_id, phone, email) " \
+                "VALUES (?, ?, ?, ?, ?, ?, ?)"
+        return self.__write_data_to_db(query, [(second_name, first_name, patronymic,
+                                                region_id, city_id, phone, email)])
+
     def get_db_name(self) -> str:
         return self.__db_name
 
@@ -36,20 +45,20 @@ class Db:
         connection = sqlite3.connect(self.get_db_name())
         return connection
 
-    def get_all_cities(self) -> dict:
+    def get_all_cities(self) -> list:
         query = "SELECT * FROM cities"
         rows = self.__get_all_from_db(query)
-        return {row[0]: self.__formatted_city(row) for row in rows}
+        return [self.__formatted_city(row) for row in rows]
 
-    def get_all_regions(self) -> dict:
+    def get_all_regions(self) -> list:
         query = "SELECT * FROM regions"
         rows = self.__get_all_from_db(query)
-        return {row[0]: self.__formatted_region(row) for row in rows}
+        return [self.__formatted_region(row) for row in rows]
 
-    def get_all_users(self) -> dict:
+    def get_all_users(self) -> list:
         query = "SELECT * FROM users"
         rows = self.__get_all_from_db(query)
-        return {row[0]: self.__formatted_user(row) for row in rows}
+        return [self.__formatted_user(row) for row in rows]
 
     def get_city_by_name(self, name: str) -> dict:
         return self.__get_city_by_filter(f"city_name='{name}'")
@@ -62,35 +71,35 @@ class Db:
         result = [row for row in connection.execute(query)]
         return result
 
-    def __get_city_by_filter(self, where: str) -> dict:
+    def __get_city_by_filter(self, where: str) -> list:
         query = f"SELECT * FROM cities WHERE {where}"
         rows = self.__get_all_from_db(query)
-        return {row[0]: self.__formatted_city(row) for row in rows}
+        return [self.__formatted_city(row) for row in rows]
 
-    def __get_region_by_filter(self, where: str) -> dict:
+    def __get_region_by_filter(self, where: str) -> list:
         query = f"SELECT * FROM regions WHERE {where}"
         rows = self.__get_all_from_db(query)
-        return {row[0]: self.__formatted_region(row) for row in rows}
+        return [self.__formatted_region(row) for row in rows]
 
-    def __get_user_by_filter(self, where: str) -> dict:
+    def __get_user_by_filter(self, where: str) -> list:
         query = f"SELECT * FROM users WHERE {where}"
         rows = self.__get_all_from_db(query)
-        return {row[0]: self.__formatted_user(row) for row in rows}
+        return [self.__formatted_user(row) for row in rows]
 
-    def __formatted_city(self, row):
+    def __formatted_city(self, row) -> dict:
         return {
             "id": row[0],
             "region_id": row[1],
             "city_name": row[2]
         }
 
-    def __formatted_region(self, row):
+    def __formatted_region(self, row) -> dict:
         return {
             "id": row[0],
             "region_name": row[1]
         }
 
-    def __formatted_user(self, row):
+    def __formatted_user(self, row) -> dict:
         return {
             "id": row[0],
             "second_name": row[1],

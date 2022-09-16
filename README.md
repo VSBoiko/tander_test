@@ -12,8 +12,11 @@
 * create_excel_with_users() - создает xlsx файл с юзерами в БД
 * add_user_from_my_resume() - создает юзера в БД на основе моего резюме (файл resume.pdf)
 
-Для проверки готового функционала выполнить:
+Для проверки готового функционала выполнить в папке проекта:
 ```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 python main.py
 ```
 
